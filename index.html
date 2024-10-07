@@ -4,8 +4,8 @@
   <title>Image Grid</title>
   <style>
     body {
-      font-family: 'Roboto', sans-serif; /* Modern font from Google Fonts */
-      background-color: #f4f4f4; /* Neutral background color */
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f4f4;
       margin: 20px;
     }
 
@@ -18,22 +18,23 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       grid-gap: 20px;
+      justify-content: center;    /* Center the grid horizontally */
     }
 
     .grid-item {
-      border-radius: 10px; /* Rounded corners */
-      overflow: hidden; /* To ensure rounded corners are applied to the image */
+      border-radius: 10px;
+      overflow: hidden;
     }
 
     .grid-item img {
       width: 100%;
       height: auto;
       cursor: pointer;
-      transition: transform 0.2s ease; /* Smooth transition for hover effect */
+      transition: transform 0.2s ease;
     }
 
     .grid-item img:hover {
-      transform: scale(1.05); /* Slight zoom on hover */
+      transform: scale(1.05);
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
