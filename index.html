@@ -3,18 +3,40 @@
 <head>
   <title>Image Grid</title>
   <style>
+    body {
+      font-family: 'Roboto', sans-serif; /* Modern font from Google Fonts */
+      background-color: #f4f4f4; /* Neutral background color */
+      margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333; 
+    }
+
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive columns */
-      grid-gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-gap: 20px;
+    }
+
+    .grid-item {
+      border-radius: 10px; /* Rounded corners */
+      overflow: hidden; /* To ensure rounded corners are applied to the image */
     }
 
     .grid-item img {
       width: 100%;
       height: auto;
       cursor: pointer;
+      transition: transform 0.2s ease; /* Smooth transition for hover effect */
+    }
+
+    .grid-item img:hover {
+      transform: scale(1.05); /* Slight zoom on hover */
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
