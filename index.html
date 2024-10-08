@@ -9,13 +9,14 @@
     body {
       font-family: 'DM Serif Display', serif; 
       background-color: #f4f4f4;
-      margin: 20px;
+      margin: 0; /* Remove default body margins */ 
     }
 
     h1 {
       text-align: center;
       color: #333;
       font-size: 3em; 
+      margin-bottom: 20px; /* Add some space below the heading */
     }
 
     .grid-container {
@@ -30,7 +31,7 @@
     .grid-item {
       border-radius: 10px;
       overflow: hidden;
-      text-align: center; /* Center the caption text */
+      text-align: center;
     }
 
     .grid-item img {
@@ -44,7 +45,7 @@
       transform: scale(1.05);
     }
 
-    .grid-item figcaption { /* Style for the caption */
+    .grid-item figcaption {
       font-family: 'DM Serif Display', serif; 
       font-size: 1em;
       margin-top: 10px; 
