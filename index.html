@@ -9,23 +9,29 @@
     body {
       font-family: 'DM Serif Display', serif; 
       background-color: #f4f4f4;
-      margin: 0; /* Remove default body margins */ 
+      margin: 0; 
+    }
+
+    .content-wrapper { 
+      display: flex;
+      flex-direction: column; 
+      align-items: center; 
+      width: 100%; 
     }
 
     h1 {
       text-align: center;
       color: #333;
       font-size: 3em; 
-      margin-bottom: 20px; /* Add some space below the heading */
+      margin-bottom: 20px; 
     }
 
     .grid-container {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       grid-gap: 20px;
-      margin-left: auto;
-      margin-right:    auto; 
       max-width: 1200px; 
+      padding: 0; /* Remove any potential padding */ 
     }
 
     .grid-item {
@@ -55,28 +61,30 @@
 </head>
 <body>
 
-<h1>Media Provenance Test Files</h1>
+<div class="content-wrapper">  
+  <h1>Media Provenance Test Files</h1>
 
-<div class="grid-container">
-  <div class="grid-item">
-    <a href="image1.jpg" target="_blank">
-      <img src="image1.jpg" alt="Image 1">
-    </a>
-    <figcaption>SynthID + IPTC</figcaption> 
+  <div class="grid-container">
+    <div class="grid-item">
+      <a href="image1.jpg" target="_blank">
+        <img src="image1.jpg" alt="Image 1">
+      </a>
+      <figcaption>Caption for Image 1</figcaption> 
+    </div>
+    <div class="grid-item">
+      <a href="image2.jpg" target="_blank">
+        <img src="image2.jpg" alt="Image 2">
+      </a>
+      <figcaption>Caption for Image 2</figcaption> 
+    </div>
+    <div class="grid-item">
+      <a href="image3.jpg" target="_blank">
+        <img src="image3.jpg" alt="Image 3">
+      </a>
+      <figcaption>Caption for Image 3</figcaption> 
+    </div>
   </div>
-  <div class="grid-item">
-    <a href="image2.jpg" target="_blank">
-      <img src="image2.jpg" alt="Image 2">
-    </a>
-    <figcaption>SynthID + IPTC</figcaption> 
-  </div>
-  <div class="grid-item">
-    <a href="image3.jpg" target="_blank">
-      <img src="image3.jpg" alt="Image 3">
-    </a>
-    <figcaption>SynthID + IPTC</figcaption> 
-  </div>
-</div>
+</div> 
 
 </body>
 </html>
