@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Image Grid</title>
+  <title>Media Provenance Test Files</title> 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">   
@@ -14,22 +14,23 @@
 
     h1 {
       text-align: center;
-      color: #333; 
+      color: #333;
+      font-size: 3em; 
     }
 
     .grid-container {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       grid-gap: 20px;
-      /* Center the grid container using auto margins */
       margin-left: auto;
-      margin-right: auto; 
-      max-width: 1200px; /* Optional: Limit the maximum width of the container */
+      margin-right:    auto; 
+      max-width: 1200px; 
     }
 
     .grid-item {
       border-radius: 10px;
       overflow: hidden;
+      text-align: center; /* Center the caption text */
     }
 
     .grid-item img {
@@ -42,27 +43,37 @@
     .grid-item img:hover {
       transform: scale(1.05);
     }
+
+    .grid-item figcaption { /* Style for the caption */
+      font-family: 'DM Serif Display', serif; 
+      font-size: 1em;
+      margin-top: 10px; 
+      color: #555; 
+    }
   </style>
 </head>
 <body>
 
-<h1>Image Grid</h1>
+<h1>Media Provenance Test Files</h1>
 
 <div class="grid-container">
   <div class="grid-item">
     <a href="image1.jpg" target="_blank">
       <img src="image1.jpg" alt="Image 1">
     </a>
+    <figcaption>SynthID + IPTC</figcaption> 
   </div>
   <div class="grid-item">
     <a href="image2.jpg" target="_blank">
       <img src="image2.jpg" alt="Image 2">
     </a>
+    <figcaption>SynthID + IPTC</figcaption> 
   </div>
   <div class="grid-item">
     <a href="image3.jpg" target="_blank">
       <img src="image3.jpg" alt="Image 3">
     </a>
+    <figcaption>SynthID + IPTC</figcaption> 
   </div>
 </div>
 
