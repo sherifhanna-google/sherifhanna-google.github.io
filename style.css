@@ -163,3 +163,26 @@ h2 {
     font-family: 'Chakra Petch', serif;
     font-size: 1em;
 }
+
+a:link {
+    color: #226195;
+    text-decoration: none;
+  }
+  
+  /* visited link */
+  a:visited {
+    color: #226195;
+    text-decoration: none;
+  }
+  
+  /* mouse over link */
+  a:hover {
+    color: #bd1b20;
+    text-decoration: none;
+  }
+  
+  /* selected link */
+  a:active {
+    color: #bd1b20;
+    text-decoration: none;
+  }
