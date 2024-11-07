@@ -1,0 +1,165 @@
+.chakra-petch-light {
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+  .chakra-petch-regular {
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .chakra-petch-medium {
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  .chakra-petch-semibold {
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+  }
+  
+  .chakra-petch-bold {
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  .chakra-petch-light-italic {
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 300;
+    font-style: italic;
+  }
+  
+  .chakra-petch-regular-italic {
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+  
+  .chakra-petch-medium-italic {
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 500;
+    font-style: italic;
+  }
+  
+  .chakra-petch-semibold-italic {
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 600;
+    font-style: italic;
+  }
+  
+  .chakra-petch-bold-italic {
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+  }  
+
+body {
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding-bottom: 300px;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+h2 {
+    text-align: center;
+    color: #424141;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    row-gap: 40px;
+    column-gap: 40px;
+    max-width: 1200px;
+    padding: 20;
+    /* Remove any potential padding */
+    margin: 100 auto;
+    margin-bottom: 50px;
+    margin-top: 50px;
+    /* Center the grid container */
+}
+
+
+.grid-item img {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    border-radius: 10px;
+    /* Apply border-radius here */
+}
+
+.grid-item img {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.grid-item video {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.grid-item img:hover {
+    transform: scale(1.05);
+}
+
+.grid-item figcaption {
+    font-family: 'Chakra Petch', serif;
+    font-size: 1em;
+    margin-top: 10px;
+    color: #555;
+}
+
+.button {
+    display: inline-block;
+    /* Make it inline-block to control size */
+    padding: 20px 40px;
+    /* Add padding for better spacing */
+    background-color: #ddd;
+    /* Light gray background */
+    color: #333;
+    /* Dark gray text color */
+    text-decoration: none;
+    text-align: center;
+    border-radius: 10px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    /* Add transition for background color */
+}
+
+.button:hover {
+    transform: scale(1.1);
+    background-color: #bbb;
+    /* Slightly darker gray on hover */
+}
+
+.button-text {
+    font-family: 'Chakra Petch', serif;
+    font-size: 1em;
+}
