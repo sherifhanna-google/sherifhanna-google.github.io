@@ -93,7 +93,7 @@ h2 {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     row-gap: 40px;
     column-gap: 40px;
-    max-width: 1200px;
+    /* max-width: 1200px;*/
     padding: 20;
     /* Remove any potential padding */
     margin: 100 auto;
