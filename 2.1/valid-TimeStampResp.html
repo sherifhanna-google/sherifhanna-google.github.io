@@ -13,14 +13,14 @@
     <link rel="stylesheet" href="../style.css">
     <script type="module" src="https://display.truepic.com/truepic_display.es.js"></script>
     <script>
-      const imgElements = document.querySelectorAll('img');
-      
-      imgElements.forEach((imgElement) => {
-        const wrapper = document.createElement('truepic-display');
-        imgElement.parentNode.insertBefore(wrapper, imgElement);
-        wrapper.appendChild(imgElement);
-      });
-      </script>
+        const imgElements = document.querySelectorAll('img');
+
+        imgElements.forEach((imgElement) => {
+            const wrapper = document.createElement('truepic-display');
+            imgElement.parentNode.insertBefore(wrapper, imgElement);
+            wrapper.appendChild(imgElement);
+        });
+    </script>
 </head>
 
 <body>
@@ -28,19 +28,25 @@
     <div class="grid-container">
         <div class="image-grid">
             <a href="valid-timestampresp/android-capture.jpg" target="_blank" class="grid-item">
-                <img src="valid-timestampresp/android-capture.jpg" alt="Description 1">
+                <truepic-display>
+                    <img src="valid-timestampresp/android-capture.jpg" alt="Description 1">
+                </truepic-display>
                 <div class="caption">
                     <h3>Android Capture</h3>
                 </div>
             </a>
             <a href="valid-timestampresp/android-capture-filter.jpg" target="_blank" class="grid-item">
-                <img src="valid-timestampresp/android-capture-filter.jpg" alt="Description 2">
+                <truepic-display>
+                    <img src="valid-timestampresp/android-capture-filter.jpg" alt="Description 2">
+                </truepic-display>
                 <div class="caption">
                     <h3>Android Capture Filter</h3>
                 </div>
             </a>
             <a href="valid-timestampresp/android-capture-cropped.jpg" target="_blank" class="grid-item">
-                <img src="valid-timestampresp/android-capture-cropped.jpg" alt="Description 3">
+                <truepic-display>
+                    <img src="valid-timestampresp/android-capture-cropped.jpg" alt="Description 3">
+                </truepic-display>
                 <div class="caption">
                     <h3>Android Capture Cropped</h3>
                 </div>
@@ -50,19 +56,25 @@
     <div class="grid-container">
         <div class="image-grid">
             <a href="valid-timestampresp/hummingbird-signed.jpg" target="_blank" class="grid-item">
-                <img src="valid-timestampresp/hummingbird-signed.jpg" alt="Description 1">
+                <truepic-display>
+                    <img src="valid-timestampresp/hummingbird-signed.jpg" alt="Description 1">
+                </truepic-display>
                 <div class="caption">
                     <h3>Humming Bird Signed</h3>
                 </div>
             </a>
             <a href="valid-timestampresp/hummingbird-signed-component.jpg" target="_blank" class="grid-item">
-                <img src="valid-timestampresp/hummingbird-signed-component.jpg" alt="Description 2">
+                <truepic-display>
+                    <img src="valid-timestampresp/hummingbird-signed-component.jpg" alt="Description 2">
+                </truepic-display>
                 <div class="caption">
                     <h3>Humming Bird Signed Component</h3>
                 </div>
             </a>
             <a href="valid-timestampresp/hummingbird-signed-parent.jpg" target="_blank" class="grid-item">
-                <img src="valid-timestampresp/hummingbird-signed-parent.jpg" alt="Description 3">
+                <truepic-display>
+                    <img src="valid-timestampresp/hummingbird-signed-parent.jpg" alt="Description 3">
+                </truepic-display>
                 <div class="caption">
                     <h3>Humming Bird Signed Parent</h3>
                 </div>
@@ -70,4 +82,5 @@
         </div>
     </div>
 </body>
+
 </html>
