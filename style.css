@@ -107,7 +107,6 @@ h1 {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: #333;
-  overflow: hidden;
   text-decoration: none; /* Remove default link underline */
   display: flex; /* Use flexbox */
   flex-direction: column; /* Align items vertically */
