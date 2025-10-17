@@ -6,6 +6,7 @@ import { TsaTrustListComponent } from './tsa-trust-list.component';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   template: `
 <main class="container mx-auto p-4 md:p-8 relative">
   <header class="text-center mb-8">
