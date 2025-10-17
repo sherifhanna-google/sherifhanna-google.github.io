@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>C2PA Conformance Explorer</title>
+  <script>
+    // Dynamically set the base href for correct asset loading in subdirectories.
+    (function() {
+      const base = document.createElement('base');
+      const path = window.location.pathname;
+      const basePath = path.substring(0, path.lastIndexOf('/') + 1);
+      base.href = basePath;
+      // Prepend the base tag to the head, so all subsequent relative URLs use it.
+      document.head.insertBefore(base, document.head.firstChild);
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     // Enable class-based dark mode in Tailwind CSS
