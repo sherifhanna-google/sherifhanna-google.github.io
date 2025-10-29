@@ -1,125 +1,19 @@
 
-.open-sans-body {
-  font-family: "Open Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
-}
-
-.open-sans-title {
-  font-family: "Open Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 700;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
-}
-
-.open-sans-heading {
-  font-family: "Open Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 600;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
-}
-
-
 body {
-    font-family: "Open Sans", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding-bottom: 300px;
-    text-align: center;
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-  font-family: "Open Sans", sans-serif;
-  font-weight: 700;
-}
-.grid-container {
-  margin-bottom: 40px;
-  display: flex; /* Use flexbox to center the grid */
-  flex-direction: column; /* Align title and grid vertically */
-  align-items: center; /* Center horizontally */
-}
-
-.grid-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.image-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(25vw, 1fr));
-  grid-gap: 1vw;
-  padding: 1vw;
-  max-width: 1200px;
-  margin: auto;
-  margin-bottom: 40px;
-}
-
-.image-grid h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.grid-item {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: #333;
-  text-decoration: none; /* Remove default link underline */
-  display: flex; /* Use flexbox */
-  flex-direction: column; /* Align items vertically */
-  max-width: 27vw;
-}
-
-.grid-item-text {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: #333;
-  overflow: hidden;
-  text-decoration: none; /* Remove default link underline */
-  padding: 20px;
-  text-align: center;
-  display: flex; /* Use flexbox */
-  flex-direction: column; /* Align items vertically */
-}
-
-.grid-item img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.caption {
-  padding: 15px;
-  margin-top: auto; /* Push caption to bottom */
-}
-
-.caption h3 {
-  margin-top: 0;
-}
-
-.caption p {
-  font-size: 0.9em;
   margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  background-color: #859FFB;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .image-grid {
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.center-container img {
+  max-width: 90%;
+  max-height: 90%;
 }
