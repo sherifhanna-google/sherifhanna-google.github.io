@@ -1,4 +1,4 @@
-// C2PA Interoperability Samples Gallery - Application Logic (crJSON & Trust List Validated)
+// C2PA Interoperability Samples Gallery - Application Logic (crJSON & Signals Rubric)
 
 (function () {
   'use strict';
@@ -317,6 +317,7 @@
         return (
           i.filename.toLowerCase().includes(q) ||
           i.folder.toLowerCase().includes(q) ||
+          (i.mediaDescription || '').toLowerCase().includes(q) ||
           (i.c2paSummary?.generator || '').toLowerCase().includes(q) ||
           (i.c2paSummary?.issuer || '').toLowerCase().includes(q) ||
           (i.c2paSummary?.digitalSourceType?.label || '').toLowerCase().includes(q) ||
@@ -404,7 +405,7 @@
               <span class="meta-badge badge-emerald">✓ Trust List Verified</span>
               <span class="meta-badge badge-slate">${folderItems.length} items</span>
               <button class="btn-secondary" onclick="window.copyFolderCli('${escapeJsString(f.folder)}')">
-                ${icons.terminal} Copy CLI
+                ${icons.terminal} Copy Download CLI
               </button>
             </div>
           </div>
@@ -435,10 +436,10 @@
         <table class="samples-table">
           <thead>
             <tr>
-              <th>Sample File</th>
+              <th>Sample File &amp; Description</th>
               <th>Collection</th>
               <th>Format / Size</th>
-              <th>Digital Source Type</th>
+              <th>Signals &amp; Provenance</th>
               <th>Claim Signer</th>
               <th>Trust Status</th>
               <th style="text-align: right;">Actions</th>
@@ -450,7 +451,7 @@
                 const dst = item.c2paSummary?.digitalSourceType;
                 return `
                 <tr>
-                  <td>
+                  <td style="max-width: 320px;">
                     <div class="table-filename-cell">
                       ${
                         item.previewUrl
@@ -459,6 +460,7 @@
                       }
                       <div>
                         <div style="font-weight: 600; color: var(--text-primary); cursor: pointer;" onclick="window.openInspector('${item.id}')">${escapeHtml(item.filename)}</div>
+                        <div style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.2rem; line-height: 1.35;">${escapeHtml(item.mediaDescription || '')}</div>
                       </div>
                     </div>
                   </td>
@@ -501,6 +503,8 @@
     const dst = item.c2paSummary?.digitalSourceType;
     const issuer = item.c2paSummary?.issuer || 'Google LLC';
     const generator = item.c2paSummary?.generator || 'Google C2PA SDK';
+    const description = item.mediaDescription || 'C2PA-manifested digital media test asset.';
+    const signals = item.signals || {};
 
     let mediaPreviewHtml = '';
 
@@ -546,6 +550,11 @@
             <h3 class="card-filename" title="${escapeHtml(item.filename)}">${escapeHtml(item.filename)}</h3>
           </div>
 
+          <!-- Imbued Media Content Description -->
+          <div class="card-description">
+            ${escapeHtml(description)}
+          </div>
+
           <div class="card-meta-pills">
             <span class="meta-badge badge-emerald">✓ Verified Trust</span>
             ${
@@ -574,7 +583,7 @@
             <a href="${encodeURI(item.url)}" download class="btn-icon-action" title="Download Sample File">
               ${icons.download}
             </a>
-            <button class="btn-icon-action" title="Copy CLI Command" onclick="window.copySampleCli('${escapeJsString(item.url)}')">
+            <button class="btn-icon-action" title="Copy Open-Source c2patool Command" onclick="window.copySampleCli('${escapeJsString(item.url)}')">
               ${icons.terminal}
             </button>
             <button class="btn-icon-action" title="Copy Sample Link" onclick="window.copySampleLink('${escapeJsString(item.filename)}')">
@@ -667,7 +676,7 @@
     const hasSidecars = item.sidecars && item.sidecars.length > 0;
 
     const tabs = [
-      { id: 'overview', label: 'Overview & Trust' },
+      { id: 'overview', label: 'Overview & Signals' },
       { id: 'json', label: 'crJSON Manifest', show: hasJson },
       { id: 'sidecars', label: `Companion Files (${item.sidecars.length})`, show: hasSidecars },
       { id: 'cli', label: 'Developer & CLI' }
@@ -690,11 +699,21 @@
     const tab = state.modalActiveTab;
     const summary = item.c2paSummary || {};
     const dst = summary.digitalSourceType;
+    const signals = item.signals || {};
 
     let html = '';
 
     if (tab === 'overview') {
       html = `
+        <!-- Media Content Description & Signals Rubric -->
+        <div class="prov-section">
+          <div class="prov-section-title">Media Content &amp; Provenance Summary</div>
+          <div class="prov-cell" style="line-height: 1.5; font-size: 0.85rem; font-weight: 500;">
+            ${escapeHtml(item.mediaDescription || '')}
+          </div>
+        </div>
+
+        <!-- Trust List Verification -->
         <div class="prov-section">
           <div class="prov-section-title">Official Trust List Validation</div>
           <div class="prov-cell" style="background-color: var(--color-emerald-bg); border-color: var(--color-emerald-border); color: var(--color-emerald-text);">
@@ -708,6 +727,40 @@
           </div>
         </div>
 
+        <!-- Signals Rubric Findings -->
+        ${
+          (signals.inceptions && signals.inceptions.length > 0) || (signals.transformations && signals.transformations.length > 0)
+            ? `
+          <div class="prov-section">
+            <div class="prov-section-title">C2PA Signals Rubric (Conformance Evaluation)</div>
+            <div class="signals-list">
+              ${(signals.inceptions || [])
+                .map(
+                  (inc) => `
+                <div class="signal-row">
+                  <span class="signal-icon-tag inception">Inception</span>
+                  <span style="font-weight: 600; color: var(--text-primary);">${escapeHtml(inc)}</span>
+                </div>
+              `
+                )
+                .join('')}
+              ${(signals.transformations || [])
+                .map(
+                  (tr) => `
+                <div class="signal-row">
+                  <span class="signal-icon-tag transformation">Transformation</span>
+                  <span style="font-weight: 600; color: var(--text-primary);">${escapeHtml(tr)}</span>
+                </div>
+              `
+                )
+                .join('')}
+            </div>
+          </div>
+        `
+            : ''
+        }
+
+        <!-- Claim & Credentials -->
         <div class="prov-section">
           <div class="prov-section-title">Claim &amp; Signing Credentials</div>
           <div class="prov-grid">
@@ -738,10 +791,11 @@
           </div>
         </div>
 
+        <!-- Digital Source Type -->
         <div class="prov-section">
-          <div class="prov-section-title">Provenance &amp; Digital Source Type</div>
+          <div class="prov-section-title">IPTC Digital Source Type</div>
           <div class="prov-cell">
-            <span class="prov-label">IPTC Digital Source Type</span>
+            <span class="prov-label">IPTC Digital Source Category</span>
             <div style="margin-top: 0.35rem;">
               ${
                 dst
@@ -752,6 +806,7 @@
           </div>
         </div>
 
+        <!-- Recorded Actions History -->
         ${
           summary.actions && summary.actions.length > 0
             ? `
@@ -777,6 +832,7 @@
             : ''
         }
 
+        <!-- Lineage & Parent Ingredients -->
         ${
           summary.ingredients && summary.ingredients.length > 0
             ? `
@@ -848,24 +904,13 @@
       `;
     } else if (tab === 'cli') {
       const fullUrl = window.location.origin + window.location.pathname.replace(/\/+$/, '') + '/' + item.url;
-      const c2paCmd = `c2pa validate --file "${item.filename}" --output_format crjson --trust prod`;
       const c2patoolCmd = `c2patool "${fullUrl}"`;
       const curlCmd = `curl -O "${fullUrl}"`;
       const rawGitUrl = `https://raw.githubusercontent.com/sherifhanna-google/sherifhanna-google.github.io/main/${item.url}`;
 
       html = `
         <div class="prov-section">
-          <div class="prov-section-title">Internal C2PA CLI (crJSON &amp; Trust List Validation)</div>
-          <div class="cli-box">
-            <code>${escapeHtml(c2paCmd)}</code>
-            <button class="btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.72rem;" onclick="window.copyToClipboard(${escapeJsParam(c2paCmd)}, 'Copied c2pa validate command')">
-              ${icons.copy}
-            </button>
-          </div>
-        </div>
-
-        <div class="prov-section">
-          <div class="prov-section-title">Open-Source c2patool CLI</div>
+          <div class="prov-section-title">Inspect with Open-Source c2patool CLI</div>
           <div class="cli-box">
             <code>${escapeHtml(c2patoolCmd)}</code>
             <button class="btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.72rem;" onclick="window.copyToClipboard(${escapeJsParam(c2patoolCmd)}, 'Copied c2patool command')">
@@ -959,8 +1004,8 @@
   };
 
   window.copySampleCli = function (sampleUrl) {
-    const filename = sampleUrl.split('/').pop();
-    window.copyToClipboard(`c2pa validate --file "${filename}" --output_format crjson --trust prod`, 'Copied c2pa validate CLI command!');
+    const fullUrl = window.location.origin + window.location.pathname.replace(/\/+$/, '') + '/' + sampleUrl;
+    window.copyToClipboard(`c2patool "${fullUrl}"`, 'Copied c2patool command!');
   };
 
   window.copySampleLink = function (filename) {
