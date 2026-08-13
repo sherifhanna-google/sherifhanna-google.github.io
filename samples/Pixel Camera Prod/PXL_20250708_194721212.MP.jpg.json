@@ -1,0 +1,105 @@
+{
+  "active_manifest": "urn:c2pa:3dca9eaf-13d9-17e2-7110-4f229baf8a36",
+  "manifests": {
+    "urn:c2pa:3dca9eaf-13d9-17e2-7110-4f229baf8a36": {
+      "claim": {
+        "instanceID": "bdabbada-0bca-9b11-70b5-4c39f5667e2f",
+        "claim_generator_info": {
+          "name": "Google C2PA SDK for Android",
+          "version": "780041847:780077845"
+        },
+        "signature": "self#jumbf=c2pa.signature",
+        "created_assertions": [
+          {
+            "url": "self#jumbf=c2pa.assertions/c2pa.actions.v2",
+            "hash": "Axs3an5HFczmpjJiejh1Z5lKQi2MVSH8g1NVbjSNOjI="
+          },
+          {
+            "url": "self#jumbf=c2pa.assertions/c2pa.hash.data",
+            "hash": "xKl2sg/aPzpFCoPVNH71jo4l0uq0kol0OiAy9PhodVc="
+          }
+        ],
+        "alg": "sha256"
+      },
+      "assertion_store": {
+        "c2pa.hash.data": {
+          "exclusions": [
+            {
+              "start": 630588,
+              "length": 4789
+            }
+          ],
+          "alg": "sha256",
+          "hash": "FQ/cdwVh3hstclUYxIhW865qZIwUi6XwBEIoWsmjsUM=",
+          "pad": "AAAAAAAAAAAAAA=="
+        },
+        "c2pa.actions.v2": {
+          "actions": [
+            {
+              "action": "c2pa.created",
+              "description": "Created by Pixel Camera.",
+              "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/computationalCapture"
+            }
+          ]
+        }
+      },
+      "signature": {
+        "alg": "es256",
+        "issuer": "Google LLC",
+        "common_name": "Pixel Camera",
+        "time": "2025-07-08T19:47:24+00:00"
+      }
+    }
+  },
+  "validation_results": {
+    "activeManifest": {
+      "success": [
+        {
+          "code": "timeStamp.validated",
+          "url": "self#jumbf=/c2pa/urn:c2pa:3dca9eaf-13d9-17e2-7110-4f229baf8a36/c2pa.signature",
+          "explanation": "timestamp message digest matched: Google Pixel Time Stamping Authority"
+        },
+        {
+          "code": "claimSignature.insideValidity",
+          "url": "self#jumbf=/c2pa/urn:c2pa:3dca9eaf-13d9-17e2-7110-4f229baf8a36/c2pa.signature",
+          "explanation": "claim signature valid"
+        },
+        {
+          "code": "claimSignature.validated",
+          "url": "self#jumbf=/c2pa/urn:c2pa:3dca9eaf-13d9-17e2-7110-4f229baf8a36/c2pa.signature",
+          "explanation": "claim signature valid"
+        },
+        {
+          "code": "assertion.hashedURI.match",
+          "url": "self#jumbf=/c2pa/urn:c2pa:3dca9eaf-13d9-17e2-7110-4f229baf8a36/c2pa.assertions/c2pa.actions.v2",
+          "explanation": "hashed uri matched: self#jumbf=c2pa.assertions/c2pa.actions.v2"
+        },
+        {
+          "code": "assertion.hashedURI.match",
+          "url": "self#jumbf=/c2pa/urn:c2pa:3dca9eaf-13d9-17e2-7110-4f229baf8a36/c2pa.assertions/c2pa.hash.data",
+          "explanation": "hashed uri matched: self#jumbf=c2pa.assertions/c2pa.hash.data"
+        },
+        {
+          "code": "assertion.dataHash.match",
+          "url": "self#jumbf=/c2pa/urn:c2pa:3dca9eaf-13d9-17e2-7110-4f229baf8a36/c2pa.assertions/c2pa.hash.data",
+          "explanation": "data hash valid"
+        }
+      ],
+      "informational": [
+        {
+          "code": "timeStamp.untrusted",
+          "url": "self#jumbf=/c2pa/urn:c2pa:3dca9eaf-13d9-17e2-7110-4f229baf8a36/c2pa.signature",
+          "explanation": "timestamp cert untrusted: Google Pixel Time Stamping Authority"
+        }
+      ],
+      "failure": [
+        {
+          "code": "signingCredential.expired",
+          "url": "self#jumbf=/c2pa/urn:c2pa:3dca9eaf-13d9-17e2-7110-4f229baf8a36/c2pa.signature",
+          "explanation": "certificate expired"
+        }
+      ]
+    }
+  },
+  "validation_state": "Invalid"
+}

@@ -1,0 +1,304 @@
+{
+  "active_manifest": "urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba",
+  "manifests": {
+    "urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba": {
+      "claim": {
+        "instanceID": "0e6f8553-812a-fe07-1a05-463226baf233",
+        "claim_generator_info": {
+          "name": "Google C2PA SDK for Android",
+          "version": "792394983:792394983"
+        },
+        "signature": "self#jumbf=c2pa.signature",
+        "created_assertions": [
+          {
+            "url": "self#jumbf=c2pa.assertions/c2pa.actions.v2",
+            "hash": "Axs3an5HFczmpjJiejh1Z5lKQi2MVSH8g1NVbjSNOjI="
+          },
+          {
+            "url": "self#jumbf=c2pa.assertions/c2pa.hash.data",
+            "hash": "uJCz82nnzd/f54Sw8JXSQaY+2DDMi6MbXF8pYPO4kMQ="
+          },
+          {
+            "url": "self#jumbf=c2pa.assertions/c2pa.hash.data.part",
+            "hash": "nXI59eF8tUgqQe4B2tGdQ6i1FgXHyKyxC51vLk6M4hY="
+          },
+          {
+            "url": "self#jumbf=c2pa.assertions/c2pa.hash.data.part__1",
+            "hash": "Y0hhVsTjHgrG7V7rpSlLSZZY7lLvkqlBLRhlcQU9L54="
+          },
+          {
+            "url": "self#jumbf=c2pa.assertions/c2pa.hash.data.part__2",
+            "hash": "Wpncm4YkerKZSo7QDRQ0cU/6gFvz0NCxMpvTi0k5lOs="
+          },
+          {
+            "url": "self#jumbf=c2pa.assertions/c2pa.hash.multi-asset",
+            "hash": "KSQPT6onyIcUFMDe8dHq7RRnY6UVNKHf/NePGHEUP/Y="
+          }
+        ],
+        "alg": "sha256"
+      },
+      "assertion_store": {
+        "c2pa.hash.multi-asset": {
+          "parts": [
+            {
+              "location": {
+                "byteOffset": 0,
+                "length": 3938693
+              },
+              "hashAssertion": {
+                "url": "self#jumbf=c2pa.assertions/c2pa.hash.data.part",
+                "hash": "nXI59eF8tUgqQe4B2tGdQ6i1FgXHyKyxC51vLk6M4hY="
+              },
+              "optional": false
+            },
+            {
+              "location": {
+                "byteOffset": 3938693,
+                "length": 89706
+              },
+              "hashAssertion": {
+                "url": "self#jumbf=c2pa.assertions/c2pa.hash.data.part__1",
+                "hash": "Y0hhVsTjHgrG7V7rpSlLSZZY7lLvkqlBLRhlcQU9L54="
+              },
+              "optional": true
+            },
+            {
+              "location": {
+                "byteOffset": 4028399,
+                "length": 1727178
+              },
+              "hashAssertion": {
+                "url": "self#jumbf=c2pa.assertions/c2pa.hash.data.part__2",
+                "hash": "Wpncm4YkerKZSo7QDRQ0cU/6gFvz0NCxMpvTi0k5lOs="
+              },
+              "optional": true
+            }
+          ],
+          "pad": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+          "pad2": []
+        },
+        "c2pa.hash.data.part__1": {
+          "alg": "sha256",
+          "hash": "mhGXOUxFXUpd7AH6NnVV6sIoN9YJu8GcmNazNhvvotM=",
+          "pad": []
+        },
+        "c2pa.hash.data.part__2": {
+          "alg": "sha256",
+          "hash": "Qr0BjkIYsHg4dZiFp3wr6UGRXCPeaVY70+BQRTT08TA=",
+          "pad": []
+        },
+        "c2pa.hash.data.part": {
+          "exclusions": [
+            {
+              "start": 6,
+              "length": 25484
+            },
+            {
+              "start": 25508,
+              "length": 6924
+            },
+            {
+              "start": 33050,
+              "length": 1522
+            },
+            {
+              "start": 34576,
+              "length": 65458
+            },
+            {
+              "start": 100038,
+              "length": 65458
+            },
+            {
+              "start": 165500,
+              "length": 65458
+            },
+            {
+              "start": 230962,
+              "length": 65458
+            },
+            {
+              "start": 296424,
+              "length": 65458
+            },
+            {
+              "start": 361886,
+              "length": 65458
+            },
+            {
+              "start": 427348,
+              "length": 65458
+            },
+            {
+              "start": 492810,
+              "length": 65458
+            },
+            {
+              "start": 558272,
+              "length": 65458
+            },
+            {
+              "start": 623734,
+              "length": 5314
+            }
+          ],
+          "alg": "sha256",
+          "hash": "eMaJ/Ws25jjdUWHQZtpaHTnYHcB4uotvkD8xoEvdUKU=",
+          "pad": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+          "pad2": []
+        },
+        "c2pa.hash.data": {
+          "exclusions": [
+            {
+              "start": 6,
+              "length": 25484
+            },
+            {
+              "start": 25508,
+              "length": 6924
+            },
+            {
+              "start": 33050,
+              "length": 1522
+            },
+            {
+              "start": 34576,
+              "length": 65458
+            },
+            {
+              "start": 100038,
+              "length": 65458
+            },
+            {
+              "start": 165500,
+              "length": 65458
+            },
+            {
+              "start": 230962,
+              "length": 65458
+            },
+            {
+              "start": 296424,
+              "length": 65458
+            },
+            {
+              "start": 361886,
+              "length": 65458
+            },
+            {
+              "start": 427348,
+              "length": 65458
+            },
+            {
+              "start": 492810,
+              "length": 65458
+            },
+            {
+              "start": 558272,
+              "length": 65458
+            },
+            {
+              "start": 623734,
+              "length": 5314
+            }
+          ],
+          "alg": "sha256",
+          "hash": "nCN5v2vgtQGNUEIITERd/klj0c/gqOjXKK+sytXQWF4=",
+          "pad": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+          "pad2": []
+        },
+        "c2pa.actions.v2": {
+          "actions": [
+            {
+              "action": "c2pa.created",
+              "description": "Created by Pixel Camera.",
+              "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/computationalCapture"
+            }
+          ]
+        }
+      },
+      "signature": {
+        "alg": "es256",
+        "issuer": "Google LLC",
+        "common_name": "Pixel Camera",
+        "time": "2025-08-08T04:41:42+00:00"
+      }
+    }
+  },
+  "validation_results": {
+    "activeManifest": {
+      "success": [
+        {
+          "code": "timeStamp.validated",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.signature",
+          "explanation": "timestamp message digest matched: Google Pixel Time Stamping Authority"
+        },
+        {
+          "code": "claimSignature.insideValidity",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.signature",
+          "explanation": "claim signature valid"
+        },
+        {
+          "code": "claimSignature.validated",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.signature",
+          "explanation": "claim signature valid"
+        },
+        {
+          "code": "assertion.hashedURI.match",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.assertions/c2pa.actions.v2",
+          "explanation": "hashed uri matched: self#jumbf=c2pa.assertions/c2pa.actions.v2"
+        },
+        {
+          "code": "assertion.hashedURI.match",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.assertions/c2pa.hash.data",
+          "explanation": "hashed uri matched: self#jumbf=c2pa.assertions/c2pa.hash.data"
+        },
+        {
+          "code": "assertion.hashedURI.match",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.assertions/c2pa.hash.data.part",
+          "explanation": "hashed uri matched: self#jumbf=c2pa.assertions/c2pa.hash.data.part"
+        },
+        {
+          "code": "assertion.hashedURI.match",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.assertions/c2pa.hash.data.part__1",
+          "explanation": "hashed uri matched: self#jumbf=c2pa.assertions/c2pa.hash.data.part__1"
+        },
+        {
+          "code": "assertion.hashedURI.match",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.assertions/c2pa.hash.data.part__2",
+          "explanation": "hashed uri matched: self#jumbf=c2pa.assertions/c2pa.hash.data.part__2"
+        },
+        {
+          "code": "assertion.hashedURI.match",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.assertions/c2pa.hash.multi-asset",
+          "explanation": "hashed uri matched: self#jumbf=c2pa.assertions/c2pa.hash.multi-asset"
+        },
+        {
+          "code": "assertion.dataHash.match",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.assertions/c2pa.hash.data",
+          "explanation": "data hash valid"
+        }
+      ],
+      "informational": [
+        {
+          "code": "timeStamp.untrusted",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.signature",
+          "explanation": "timestamp cert untrusted: Google Pixel Time Stamping Authority"
+        },
+        {
+          "code": "assertion.dataHash.additionalExclusionsPresent",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.assertions/c2pa.hash.data",
+          "explanation": "extra data hash exclusions found"
+        }
+      ],
+      "failure": [
+        {
+          "code": "signingCredential.expired",
+          "url": "self#jumbf=/c2pa/urn:c2pa:7a72aeb9-67c5-fc13-f6b8-41bc0cea2aba/c2pa.signature",
+          "explanation": "certificate expired"
+        }
+      ]
+    }
+  },
+  "validation_state": "Invalid"
+}

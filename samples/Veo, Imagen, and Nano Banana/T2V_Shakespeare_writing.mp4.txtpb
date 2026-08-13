@@ -1,0 +1,103 @@
+Validation result:
+active_manifest {
+  label: "urn:c2pa:41c0b58e-a7c0-2c6e-46e5-46c83d5b68c2"
+  claim {
+    claim_generator_info {
+      name: "Google C2PA Core Generator Library"
+      version: "800244081:800244081"
+    }
+    signature_info {
+      issuer: "CN=Google Media Processing Services,OU=Google System 98649,O=Google LLC,C=US"
+      timestamping_time {
+        seconds: 1756516459
+      }
+      certificate_issuer: "CN=Google C2PA Media Services 1P ICA G3,O=Google LLC,C=US"
+    }
+    created_assertions {
+      url: "self#jumbf=c2pa.assertions/c2pa.actions.v2"
+      algorithm: "sha256"
+      hash: "<redacted>"
+    }
+    created_assertions {
+      url: "self#jumbf=c2pa.assertions/c2pa.hash.bmff.v3"
+      algorithm: "sha256"
+      hash: "<redacted>"
+    }
+    default_algorithm: "sha256"
+    label: "c2pa.claim.v2"
+    instance_id: "0910873c-3cfa-2660-410c-4abec7a0c757"
+  }
+  assertions {
+    label: "c2pa.actions.v2"
+    actions {
+      actions {
+        action: "c2pa.created"
+        description: "Created by Google Generative AI."
+        digital_source_type: "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+      }
+    }
+  }
+  assertions {
+    label: "c2pa.hash.bmff.v3"
+    bmff_based_hash {
+      exclusions {
+        xpath: "/ftyp"
+      }
+      exclusions {
+        xpath: "/uuid"
+        data {
+          offset: 8
+          value: "<redacted>"
+        }
+      }
+      exclusions {
+        xpath: "/mfra"
+      }
+      exclusions {
+        xpath: "/free"
+      }
+      alg: "sha256"
+      hash: "<redacted>"
+      name: "BMFF file hash"
+    }
+  }
+  validation {
+    successes {
+      code: "signingCredential.ocsp.notRevoked"
+      url: "self#jumbf=/c2pa/urn:c2pa:41c0b58e-a7c0-2c6e-46e5-46c83d5b68c2/c2pa.signature"
+    }
+    successes {
+      code: "timeStamp.validated"
+      url: "self#jumbf=/c2pa/urn:c2pa:41c0b58e-a7c0-2c6e-46e5-46c83d5b68c2/c2pa.signature"
+    }
+    successes {
+      code: "timeStamp.trusted"
+      url: "self#jumbf=/c2pa/urn:c2pa:41c0b58e-a7c0-2c6e-46e5-46c83d5b68c2/c2pa.signature"
+    }
+    successes {
+      code: "signingCredential.trusted"
+      url: "self#jumbf=/c2pa/urn:c2pa:41c0b58e-a7c0-2c6e-46e5-46c83d5b68c2/c2pa.signature"
+    }
+    successes {
+      code: "claimSignature.insideValidity"
+      url: "self#jumbf=/c2pa/urn:c2pa:41c0b58e-a7c0-2c6e-46e5-46c83d5b68c2/c2pa.signature"
+    }
+    successes {
+      code: "claimSignature.validated"
+      url: "self#jumbf=/c2pa/urn:c2pa:41c0b58e-a7c0-2c6e-46e5-46c83d5b68c2/c2pa.signature"
+    }
+    successes {
+      code: "assertion.hashedURI.match"
+      url: "self#jumbf=/c2pa/urn:c2pa:41c0b58e-a7c0-2c6e-46e5-46c83d5b68c2/c2pa.assertions/c2pa.actions.v2"
+    }
+    successes {
+      code: "assertion.hashedURI.match"
+      url: "self#jumbf=/c2pa/urn:c2pa:41c0b58e-a7c0-2c6e-46e5-46c83d5b68c2/c2pa.assertions/c2pa.hash.bmff.v3"
+    }
+    successes {
+      code: "assertion.bmffHash.match"
+      url: "self#jumbf=/c2pa/urn:c2pa:41c0b58e-a7c0-2c6e-46e5-46c83d5b68c2/c2pa.assertions/c2pa.hash.bmff.v3"
+    }
+  }
+}
+media_type: "video/mp4"
