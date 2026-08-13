@@ -60,7 +60,7 @@
     copy: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>`,
     inspect: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>`,
     terminal: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`,
-    shieldCheck: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>`
+    check: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`
   };
 
   // Initialize
@@ -504,7 +504,6 @@
     const issuer = item.c2paSummary?.issuer || 'Google LLC';
     const generator = item.c2paSummary?.generator || 'Google C2PA SDK';
     const description = item.mediaDescription || 'C2PA-manifested digital media test asset.';
-    const signals = item.signals || {};
 
     let mediaPreviewHtml = '';
 
@@ -705,25 +704,20 @@
 
     if (tab === 'overview') {
       html = `
-        <!-- Media Content Description & Signals Rubric -->
-        <div class="prov-section">
-          <div class="prov-section-title">Media Content &amp; Provenance Summary</div>
-          <div class="prov-cell" style="line-height: 1.5; font-size: 0.85rem; font-weight: 500;">
-            ${escapeHtml(item.mediaDescription || '')}
+        <!-- Compact Trust Validation Strip -->
+        <div class="trust-banner-compact">
+          <div class="trust-badge-label">
+            <span style="display:inline-flex; align-items:center; width:16px; height:16px;">${icons.check}</span>
+            <span>Verified with C2PA &amp; TSA Trust Lists (Prod)</span>
           </div>
+          <span class="trust-badge-sub">Cert &bull; TSA &bull; Signatures Valid</span>
         </div>
 
-        <!-- Trust List Verification -->
+        <!-- Media Content Description -->
         <div class="prov-section">
-          <div class="prov-section-title">Official Trust List Validation</div>
-          <div class="prov-cell" style="background-color: var(--color-emerald-bg); border-color: var(--color-emerald-border); color: var(--color-emerald-text);">
-            <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.9rem;">
-              ${icons.shieldCheck}
-              <span>Validated against C2PA Trust List &amp; TSA Trust List (Prod)</span>
-            </div>
-            <div style="font-size: 0.76rem; margin-top: 0.35rem; opacity: 0.9;">
-              Signing Credential: <strong>Trusted</strong> &bull; Time Stamp: <strong>Trusted</strong> &bull; Cryptographic Signatures: <strong>Valid</strong>
-            </div>
+          <div class="prov-section-title">Media Content &amp; Provenance Summary</div>
+          <div class="prov-cell" style="line-height: 1.5; font-size: 0.84rem; font-weight: 500;">
+            ${escapeHtml(item.mediaDescription || '')}
           </div>
         </div>
 
