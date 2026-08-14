@@ -951,11 +951,14 @@ body {
 .meta-badge {
   font-size: 0.72rem;
   font-weight: 600;
-  padding: 0.2rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   border-radius: var(--radius-full);
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.2;
 }
 
 .meta-badge.badge-emerald {
@@ -1146,12 +1149,23 @@ body {
   font-size: 0.72rem;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border-default);
+  white-space: nowrap;
 }
 
 .samples-table td {
   padding: 0.85rem 1rem;
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+.samples-table td:nth-child(2),
+.samples-table td:nth-child(3),
+.samples-table td:nth-child(4),
+.samples-table td:nth-child(5),
+.samples-table td:nth-child(6),
+.samples-table td:nth-child(7) {
+  white-space: nowrap;
 }
 
 .samples-table tr:hover td {
