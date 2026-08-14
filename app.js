@@ -14,6 +14,7 @@
     sortOrder: 'default',
     activeModalItem: null,
     modalActiveTab: 'overview',
+    selectedDagNodeIndex: null,
     theme: localStorage.getItem('c2pa_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
   };
 
@@ -601,6 +602,7 @@
 
     state.activeModalItem = item;
     state.modalActiveTab = activeTab;
+    state.selectedDagNodeIndex = null;
 
     if (elements.modalTitle) {
       elements.modalTitle.textContent = item.filename;
@@ -711,12 +713,13 @@
   // Render a Single Compact DAG Flow Node
   function renderDagNodeCardHtml(node) {
     const isRoot = node.isRoot;
+    const isSelected = state.selectedDagNodeIndex === node.index;
     const inceptions = node.inceptions || [];
     const transformations = node.transformations || [];
-    const fullTooltip = `Manifest #${node.index} (${isRoot ? 'Active Claim' : 'Ingredient'})\nSigner: ${node.signerDisplay || node.signer}\nFormat: ${node.format || 'Media Asset'}`;
+    const fullTooltip = `Manifest #${node.index} (${isRoot ? 'Active Claim' : 'Ingredient'})\nClick to inspect details\nSigner: ${node.signerDisplay || node.signer}\nFormat: ${node.format || 'Media Asset'}`;
 
     return `
-      <div class="dag-flow-node ${isRoot ? 'is-active-root' : ''}" title="${escapeHtml(fullTooltip)}">
+      <div class="dag-flow-node ${isRoot ? 'is-active-root' : ''} ${isSelected ? 'is-selected' : ''}" title="${escapeHtml(fullTooltip)}" onclick="window.selectDagNode(${node.index})">
         <div class="dag-flow-node-header">
           <div class="dag-flow-node-title">
             <span>#${node.index}</span>
@@ -802,6 +805,9 @@
       .map(Number)
       .sort((a, b) => a - b);
 
+    return sortedLayerKeys.map((k) => layers[k]);
+  }
+
   // Render Complete Provenance Signals DAG with individual connector from each ancestor
   function renderProvenanceDagFlow(dag) {
     if (!dag || !dag.nodes || dag.nodes.length === 0) {
@@ -809,14 +815,6 @@
     }
 
     const nodes = dag.nodes;
-    if (nodes.length === 1) {
-      return `
-        <div class="dag-flow-container">
-          ${renderDagNodeCardHtml(nodes[0])}
-        </div>
-      `;
-    }
-
     const layers = computeDagLayers(nodes);
     let html = '<div class="dag-flow-container">';
 
@@ -859,6 +857,82 @@
                 `;
               })
               .join('')}
+          </div>
+        `;
+      }
+    }
+
+    // If a node is selected, render its expanded details inspector drawer
+    if (state.selectedDagNodeIndex != null) {
+      const selNode = nodes.find((n) => n.index === state.selectedDagNodeIndex);
+      if (selNode) {
+        const inceptions = selNode.inceptions || [];
+        const transformations = selNode.transformations || [];
+        html += `
+          <div class="dag-node-inspector-card">
+            <div class="dag-node-inspector-header">
+              <div class="dag-node-inspector-title">
+                <span>Manifest #${selNode.index}</span>
+                ${
+                  selNode.isRoot
+                    ? '<span class="meta-badge badge-emerald" style="font-size: 0.7rem;">Active Output Claim</span>'
+                    : '<span class="meta-badge badge-indigo" style="font-size: 0.7rem;">Parent Ingredient</span>'
+                }
+              </div>
+              <button class="dag-node-inspector-close" onclick="window.selectDagNode(null)" title="Close details">✕</button>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.78rem;">
+              <div>
+                <span style="color: var(--text-tertiary); font-weight: 500;">Signer: </span>
+                <span style="color: var(--text-primary); font-weight: 600;">${escapeHtml(selNode.signerDisplay || selNode.signer)}</span>
+              </div>
+              ${
+                selNode.signerOU
+                  ? `<div><span style="color: var(--text-tertiary); font-weight: 500;">Organizational Unit: </span><span style="color: var(--text-secondary);">${escapeHtml(selNode.signerOU)}</span></div>`
+                  : ''
+              }
+              ${
+                selNode.format
+                  ? `<div><span style="color: var(--text-tertiary); font-weight: 500;">Media Format: </span><span style="font-family: var(--font-mono); color: var(--text-secondary); font-size: 0.75rem;">${escapeHtml(selNode.format)}</span></div>`
+                  : ''
+              }
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.25rem;">
+              <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--text-tertiary);">Signal Breakdown</span>
+              ${inceptions
+                .map(
+                  (inc) => `
+                <div class="signal-pill inception" style="white-space: normal; line-height: 1.35; padding: 0.3rem 0.55rem;">
+                  <span class="signal-pill-dot"></span>
+                  <span><strong>Inception:</strong> ${escapeHtml(inc.replace(/^Contains\s+/i, ''))}</span>
+                </div>
+              `
+                )
+                .join('')}
+              ${transformations
+                .map(
+                  (tr) => `
+                <div class="signal-pill transformation" style="white-space: normal; line-height: 1.35; padding: 0.3rem 0.55rem;">
+                  <span class="signal-pill-dot"></span>
+                  <span><strong>Transformation:</strong> ${escapeHtml(tr.replace(/^Contains\s+/i, ''))}</span>
+                </div>
+              `
+                )
+                .join('')}
+              ${
+                inceptions.length === 0 && transformations.length === 0
+                  ? '<span style="font-size: 0.72rem; color: var(--text-tertiary); font-style: italic;">No local signals recorded on this manifest node</span>'
+                  : ''
+              }
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--border-subtle);">
+              <button class="btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.74rem;" onclick="window.switchModalTab('json')">
+                ${icons.inspect} View in crJSON Manifest
+              </button>
+            </div>
           </div>
         `;
       }
@@ -1099,6 +1173,17 @@
 
   window.openInspector = openInspector;
   window.closeModal = closeModal;
+
+  window.selectDagNode = function (index) {
+    if (state.selectedDagNodeIndex === index) {
+      state.selectedDagNodeIndex = null;
+    } else {
+      state.selectedDagNodeIndex = index;
+    }
+    if (state.activeModalItem) {
+      renderModalTabContent(state.activeModalItem);
+    }
+  };
 
   window.switchModalTab = function (tabId) {
     state.modalActiveTab = tabId;

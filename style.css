@@ -1464,7 +1464,8 @@ body {
   gap: 0.35rem;
   box-shadow: var(--shadow-sm);
   position: relative;
-  cursor: default;
+  cursor: pointer;
+  user-select: none;
   transition: all var(--transition-fast);
 }
 
@@ -1477,6 +1478,12 @@ body {
 .dag-flow-node.is-active-root {
   border-color: var(--brand-primary);
   box-shadow: 0 0 0 1.5px rgba(37, 99, 235, 0.2), var(--shadow-sm);
+}
+
+.dag-flow-node.is-selected {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 2.5px rgba(37, 99, 235, 0.35), var(--shadow-md);
+  background-color: var(--brand-primary-light);
 }
 
 .dag-flow-node.is-active-root:hover {
@@ -1586,7 +1593,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  cursor: help;
+  cursor: pointer;
   transition: opacity var(--transition-fast);
 }
 
@@ -1612,6 +1619,52 @@ body {
   border-radius: var(--radius-full);
   background-color: currentColor;
   flex-shrink: 0;
+}
+
+/* Selected Manifest Node Inspector Card */
+.dag-node-inspector-card {
+  margin-top: 0.75rem;
+  width: 100%;
+  max-width: 520px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-left: 3px solid var(--brand-primary);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  box-shadow: var(--shadow-md);
+}
+
+.dag-node-inspector-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.dag-node-inspector-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dag-node-inspector-close {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.2rem;
+}
+
+.dag-node-inspector-close:hover {
+  color: var(--text-primary);
 }
   gap: 0.4rem;
   font-size: 0.74rem;
