@@ -743,17 +743,57 @@
     `;
   }
 
-  // Render DAG Flowchart Pipeline with Directional Connectors
+  // Compute Topological Layer Hierarchy
+  function computeDagLayers(nodes) {
+    const nodeMap = {};
+    nodes.forEach((n) => (nodeMap[n.index] = n));
+
+    const depth = {};
+    nodes.forEach((n) => (depth[n.index] = 0));
+
+    // Longest path from root (0)
+    let changed = true;
+    let iterations = 0;
+    while (changed && iterations < 50) {
+      changed = false;
+      iterations++;
+      for (const n of nodes) {
+        const cDepth = depth[n.index] || 0;
+        for (const ing of n.ingredients || []) {
+          const pIdx = ing.index;
+          if ((depth[pIdx] || 0) < cDepth + 1) {
+            depth[pIdx] = cDepth + 1;
+            changed = true;
+          }
+        }
+      }
+    }
+
+    const maxD = Math.max(...Object.values(depth), 0);
+    const layers = {};
+    for (const [nIdxStr, d] of Object.entries(depth)) {
+      const nIdx = parseInt(nIdxStr, 10);
+      const layerIdx = maxD - d; // 0 = ancestor, maxD = root
+      if (!layers[layerIdx]) layers[layerIdx] = [];
+      if (nodeMap[nIdx]) layers[layerIdx].push(nodeMap[nIdx]);
+    }
+
+    // Sort layer keys
+    const sortedLayerKeys = Object.keys(layers)
+      .map(Number)
+      .sort((a, b) => a - b);
+
+    return sortedLayerKeys.map((k) => layers[k]);
+  }
+
+  // Render Complete Provenance Signals DAG with explicit multi-layer connectors
   function renderProvenanceDagFlow(dag) {
     if (!dag || !dag.nodes || dag.nodes.length === 0) {
       return '<div style="font-size: 0.8rem; color: var(--text-tertiary);">No DAG signals available.</div>';
     }
 
     const nodes = dag.nodes;
-    const nodeCount = nodes.length;
-
-    // Single Node Case
-    if (nodeCount === 1) {
+    if (nodes.length === 1) {
       return `
         <div class="dag-flow-container">
           ${renderDagNodeCardHtml(nodes[0])}
@@ -761,91 +801,55 @@
       `;
     }
 
-    // Topological Sequence Rendering:
-    // Sort from root down or parent down to root
-    // For standard linear chains: reverse order (Node N -> ... -> Node 0)
-    // Build parent-to-child flow
-    const nodeMap = {};
-    nodes.forEach((n) => (nodeMap[n.index] = n));
+    const layers = computeDagLayers(nodes);
+    let html = '<div class="dag-flow-container">';
 
-    // Simple Linear Chain (e.g. 1 -> 0, 2 -> 1 -> 0, 3 -> 2 -> 1 -> 0)
-    // Check if each node has at most 1 parent
-    let isLinear = true;
-    for (let i = 0; i < nodes.length; i++) {
-      if (nodes[i].ingredients && nodes[i].ingredients.length > 1) {
-        isLinear = false;
-        break;
-      }
-    }
+    for (let i = 0; i < layers.length; i++) {
+      const currentLayerNodes = layers[i];
 
-    if (isLinear) {
-      // Find chain order: start from root (node 0) and traverse parents
-      const chain = [];
-      let curr = nodeMap[0];
-      while (curr) {
-        chain.unshift(curr); // place parent before child
-        if (curr.ingredients && curr.ingredients.length > 0) {
-          const parentIdx = curr.ingredients[0].index;
-          curr = nodeMap[parentIdx];
-        } else {
-          curr = null;
-        }
-      }
-
-      // If chain contains all nodes:
-      if (chain.length === nodeCount) {
-        let flowHtml = '<div class="dag-flow-container">';
-        for (let i = 0; i < chain.length; i++) {
-          flowHtml += renderDagNodeCardHtml(chain[i]);
-          if (i < chain.length - 1) {
-            // Find edge relationship to next child
-            const nextChild = chain[i + 1];
-            const rel = (nextChild.ingredients && nextChild.ingredients[0]?.relationship) || 'parentOf';
-            flowHtml += `
-              <div class="dag-flow-connector">
-                <div class="dag-flow-line"></div>
-                <div class="dag-flow-edge-badge">
-                  <svg style="width: 11px; height: 11px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                  <span>${escapeHtml(rel)}</span>
-                </div>
-                <div class="dag-flow-arrow"></div>
-              </div>
-            `;
-          }
-        }
-        flowHtml += '</div>';
-        return flowHtml;
-      }
-    }
-
-    // Branching Tree or Multi-Parent DAG:
-    // Render Layered Tree
-    let treeHtml = '<div class="dag-flow-container" style="gap: 0.85rem;">';
-    
-    // Group into levels
-    // Root Node (0) at bottom, ancestors above
-    const nonRoots = nodes.filter((n) => !n.isRoot);
-    const root = nodes.find((n) => n.isRoot) || nodes[0];
-
-    treeHtml += `
-      <div class="dag-flow-branches-row">
-        ${nonRoots.map((n) => renderDagNodeCardHtml(n)).join('')}
-      </div>
-      
-      <div class="dag-flow-connector">
-        <div class="dag-flow-line" style="height: 32px;"></div>
-        <div class="dag-flow-edge-badge">
-          <svg style="width: 11px; height: 11px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-          <span>Lineage &amp; Composition</span>
+      // Render nodes in current layer
+      html += `
+        <div class="dag-flow-branches-row">
+          ${currentLayerNodes.map((n) => renderDagNodeCardHtml(n)).join('')}
         </div>
-        <div class="dag-flow-arrow"></div>
-      </div>
+      `;
 
-      ${renderDagNodeCardHtml(root)}
-    `;
+      // If not the bottom layer, render the explicit connector pipeline to the next layer
+      if (i < layers.length - 1) {
+        const nextLayerNodes = layers[i + 1];
 
-    treeHtml += '</div>';
-    return treeHtml;
+        // Find relationship edges connecting current layer to next layer
+        const relationships = new Set();
+        const nextNodeTitles = [];
+
+        nextLayerNodes.forEach((child) => {
+          (child.ingredients || []).forEach((ing) => {
+            const isFromCurrentLayer = currentLayerNodes.some((parent) => parent.index === ing.index);
+            if (isFromCurrentLayer) {
+              relationships.add(ing.relationship || 'inputTo');
+              nextNodeTitles.push(`Manifest #${child.index}`);
+            }
+          });
+        });
+
+        const relList = Array.from(relationships);
+        const relLabel = relList.length > 0 ? relList.join(' / ') : 'parentOf';
+
+        html += `
+          <div class="dag-flow-connector">
+            <div class="dag-flow-line"></div>
+            <div class="dag-flow-edge-badge">
+              <svg style="width: 11px; height: 11px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+              <span>${escapeHtml(relLabel)}</span>
+            </div>
+            <div class="dag-flow-arrow"></div>
+          </div>
+        `;
+      }
+    }
+
+    html += '</div>';
+    return html;
   }
 
   function renderModalTabContent(item) {
