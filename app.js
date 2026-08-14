@@ -802,51 +802,7 @@
       .map(Number)
       .sort((a, b) => a - b);
 
-    return sortedLayerKeys.map((k) => layers[k]);
-  }
-
-  // Generate dynamic SVG Branching Connector between layers
-  function generateBranchConnectorHtml(parentCount, relLabel) {
-    if (parentCount <= 1) {
-      return `
-        <div class="dag-flow-connector">
-          <div class="dag-flow-line"></div>
-          <div class="dag-flow-edge-badge">
-            <svg style="width: 10px; height: 10px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-            <span>${escapeHtml(relLabel)}</span>
-          </div>
-          <div class="dag-flow-arrow"></div>
-        </div>
-      `;
-    }
-
-    // Multi-parent convergence into child
-    const pCenters = Array.from({ length: parentCount }, (_, i) => ((i + 0.5) * 100) / parentCount);
-    const pMin = pCenters[0];
-    const pMax = pCenters[pCenters.length - 1];
-
-    let pathD = '';
-    pCenters.forEach((c) => {
-      pathD += `M ${c.toFixed(1)} 0 V 14 `;
-    });
-    pathD += `M ${pMin.toFixed(1)} 14 H ${pMax.toFixed(1)} `;
-    pathD += `M 50 14 V 28 `;
-
-    return `
-      <div class="dag-branch-connector-wrap">
-        <svg class="dag-branch-svg" viewBox="0 0 100 32" preserveAspectRatio="none">
-          <path d="${pathD}" stroke="var(--border-default)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        <div class="dag-flow-edge-badge" style="margin-top: -24px; margin-bottom: 2px;">
-          <svg style="width: 10px; height: 10px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-          <span>${escapeHtml(relLabel)}</span>
-        </div>
-        <div class="dag-flow-arrow"></div>
-      </div>
-    `;
-  }
-
-  // Render Complete Provenance Signals DAG with explicit multi-layer connectors
+  // Render Complete Provenance Signals DAG with individual connector from each ancestor
   function renderProvenanceDagFlow(dag) {
     if (!dag || !dag.nodes || dag.nodes.length === 0) {
       return '<div style="font-size: 0.8rem; color: var(--text-tertiary);">No DAG signals available.</div>';
@@ -874,26 +830,37 @@
         </div>
       `;
 
-      // If not the bottom layer, render the explicit branching connector pipeline to the next layer
+      // If not the bottom layer, render an individual connector column directly under each parent node
       if (i < layers.length - 1) {
         const nextLayerNodes = layers[i + 1];
 
-        // Find relationship edges connecting current layer to next layer
-        const relationships = new Set();
-
-        nextLayerNodes.forEach((child) => {
-          (child.ingredients || []).forEach((ing) => {
-            const isFromCurrentLayer = currentLayerNodes.some((parent) => parent.index === ing.index);
-            if (isFromCurrentLayer) {
-              relationships.add(ing.relationship || 'inputTo');
-            }
-          });
-        });
-
-        const relList = Array.from(relationships);
-        const relLabel = relList.length > 0 ? relList.join(' / ') : 'parentOf';
-
-        html += generateBranchConnectorHtml(currentLayerNodes.length, relLabel);
+        html += `
+          <div class="dag-flow-connectors-row">
+            ${currentLayerNodes
+              .map((pNode) => {
+                // Find specific edge relationship from this parent node to any child in next layer
+                let rel = 'parentOf';
+                for (const child of nextLayerNodes) {
+                  const ing = (child.ingredients || []).find((ingItem) => ingItem.index === pNode.index);
+                  if (ing) {
+                    rel = ing.relationship || 'inputTo';
+                    break;
+                  }
+                }
+                return `
+                  <div class="dag-flow-connector-col">
+                    <div class="dag-flow-line"></div>
+                    <div class="dag-flow-edge-badge">
+                      <svg style="width: 10px; height: 10px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                      <span>${escapeHtml(rel)}</span>
+                    </div>
+                    <div class="dag-flow-arrow"></div>
+                  </div>
+                `;
+              })
+              .join('')}
+          </div>
+        `;
       }
     }
 

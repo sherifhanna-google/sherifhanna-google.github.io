@@ -1518,37 +1518,31 @@ body {
   gap: 0.25rem;
 }
 
-.dag-flow-connector {
+.dag-flow-connectors-row {
+  display: flex;
+  gap: 0.65rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 520px;
+}
+
+.dag-flow-connector-col {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  padding: 0.35rem 0;
-  width: 100%;
+  padding: 0.25rem 0;
 }
 
 .dag-flow-line {
   width: 2px;
   height: 20px;
   background-color: var(--border-default);
-}
-
-.dag-branch-connector-wrap {
-  width: 100%;
-  max-width: 520px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 0.15rem 0;
-}
-
-.dag-branch-svg {
-  width: 100%;
-  height: 32px;
-  overflow: visible;
 }
 
 .dag-flow-edge-badge {
@@ -1566,6 +1560,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.2rem;
+  white-space: nowrap;
 }
 
 .dag-flow-arrow {
