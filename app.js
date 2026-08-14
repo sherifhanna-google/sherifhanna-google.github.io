@@ -1,4 +1,4 @@
-// C2PA Interoperability Samples Gallery - Application Logic (crJSON & Signals DAG)
+// C2PA Interoperability Samples Gallery - Application Logic (crJSON & Interactive Signals DAG)
 
 (function () {
   'use strict';
@@ -65,7 +65,6 @@
 
   // Initialize
   function init() {
-    initMermaid();
     applyTheme(state.theme);
     setupEventListeners();
     updateStatsDisplay();
@@ -73,21 +72,6 @@
     renderFilterChips();
     renderGallery();
     handleUrlHash();
-  }
-
-  function initMermaid() {
-    if (window.mermaid) {
-      window.mermaid.initialize({
-        startOnLoad: false,
-        theme: state.theme === 'dark' ? 'dark' : 'default',
-        securityLevel: 'loose',
-        flowchart: {
-          useMaxWidth: true,
-          htmlLabels: true,
-          curve: 'basis'
-        }
-      });
-    }
   }
 
   // Theme Management
@@ -100,17 +84,6 @@
         ? `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`
         : `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`;
       elements.themeToggleBtn.setAttribute('title', `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`);
-    }
-    if (window.mermaid) {
-      window.mermaid.initialize({
-        startOnLoad: false,
-        theme: theme === 'dark' ? 'dark' : 'default',
-        securityLevel: 'loose'
-      });
-      // Re-render active modal DAG if open
-      if (state.activeModalItem && state.modalActiveTab === 'overview') {
-        renderModalTabContent(state.activeModalItem);
-      }
     }
   }
 
@@ -719,56 +692,160 @@
       .join('');
   }
 
-  // Construct Mermaid Directed Acyclic Graph syntax from signals DAG
-  function buildMermaidGraphSyntax(dag) {
-    if (!dag || !dag.nodes || dag.nodes.length === 0) return '';
+  // Render a Single DAG Flow Node
+  function renderDagNodeCardHtml(node) {
+    const isRoot = node.isRoot;
+    const inceptions = node.inceptions || [];
+    const transformations = node.transformations || [];
 
-    const lines = [
-      'graph TD',
-      '  %% Node Styling Definitions',
-      '  classDef rootNode fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#ffffff;',
-      '  classDef ingNode fill:#1e293b,stroke:#475569,stroke-width:1.5px,color:#ffffff;',
-      '  classDef pseudoNode fill:#334155,stroke:#64748b,stroke-width:1.5px,stroke-dasharray: 4 4,color:#cbd5e1;'
-    ];
+    return `
+      <div class="dag-flow-node ${isRoot ? 'is-active-root' : ''}">
+        <div class="dag-flow-node-header">
+          <div class="dag-flow-node-title">
+            <span>Manifest #${node.index}</span>
+            ${
+              isRoot
+                ? '<span class="meta-badge badge-emerald" style="font-size: 0.68rem; padding: 0.15rem 0.45rem;">Active Claim</span>'
+                : '<span class="meta-badge badge-indigo" style="font-size: 0.68rem; padding: 0.15rem 0.45rem;">Ingredient</span>'
+            }
+          </div>
+          <div class="dag-flow-node-signer" title="${escapeHtml(node.signerOrg || node.signer)}">${escapeHtml(node.signerDisplay || node.signer)}</div>
+        </div>
 
-    dag.nodes.forEach((node) => {
-      const id = `N${node.index}`;
-      const title = node.isRoot ? `Manifest #${node.index} (Active Claim)` : `Manifest #${node.index}`;
-      const signer = escapeHtml(node.signer);
+        <div class="dag-flow-signals-wrap">
+          ${inceptions
+            .map(
+              (inc) => `
+            <span class="signal-pill inception" title="${escapeHtml(inc)}">
+              <span class="signal-pill-dot"></span>
+              <span>Inception: ${escapeHtml(inc.replace(/^Contains\s+/i, ''))}</span>
+            </span>
+          `
+            )
+            .join('')}
+          ${transformations
+            .map(
+              (tr) => `
+            <span class="signal-pill transformation" title="${escapeHtml(tr)}">
+              <span class="signal-pill-dot"></span>
+              <span>Transformation: ${escapeHtml(tr.replace(/^Contains\s+/i, ''))}</span>
+            </span>
+          `
+            )
+            .join('')}
+          ${
+            inceptions.length === 0 && transformations.length === 0
+              ? '<span style="font-size: 0.72rem; color: var(--text-tertiary); font-style: italic; padding: 0.1rem 0;">No local trait signals triggered</span>'
+              : ''
+          }
+        </div>
+      </div>
+    `;
+  }
+
+  // Render DAG Flowchart Pipeline with Directional Connectors
+  function renderProvenanceDagFlow(dag) {
+    if (!dag || !dag.nodes || dag.nodes.length === 0) {
+      return '<div style="font-size: 0.8rem; color: var(--text-tertiary);">No DAG signals available.</div>';
+    }
+
+    const nodes = dag.nodes;
+    const nodeCount = nodes.length;
+
+    // Single Node Case
+    if (nodeCount === 1) {
+      return `
+        <div class="dag-flow-container">
+          ${renderDagNodeCardHtml(nodes[0])}
+        </div>
+      `;
+    }
+
+    // Topological Sequence Rendering:
+    // Sort from root down or parent down to root
+    // For standard linear chains: reverse order (Node N -> ... -> Node 0)
+    // Build parent-to-child flow
+    const nodeMap = {};
+    nodes.forEach((n) => (nodeMap[n.index] = n));
+
+    // Simple Linear Chain (e.g. 1 -> 0, 2 -> 1 -> 0, 3 -> 2 -> 1 -> 0)
+    // Check if each node has at most 1 parent
+    let isLinear = true;
+    for (let i = 0; i < nodes.length; i++) {
+      if (nodes[i].ingredients && nodes[i].ingredients.length > 1) {
+        isLinear = false;
+        break;
+      }
+    }
+
+    if (isLinear) {
+      // Find chain order: start from root (node 0) and traverse parents
+      const chain = [];
+      let curr = nodeMap[0];
+      while (curr) {
+        chain.unshift(curr); // place parent before child
+        if (curr.ingredients && curr.ingredients.length > 0) {
+          const parentIdx = curr.ingredients[0].index;
+          curr = nodeMap[parentIdx];
+        } else {
+          curr = null;
+        }
+      }
+
+      // If chain contains all nodes:
+      if (chain.length === nodeCount) {
+        let flowHtml = '<div class="dag-flow-container">';
+        for (let i = 0; i < chain.length; i++) {
+          flowHtml += renderDagNodeCardHtml(chain[i]);
+          if (i < chain.length - 1) {
+            // Find edge relationship to next child
+            const nextChild = chain[i + 1];
+            const rel = (nextChild.ingredients && nextChild.ingredients[0]?.relationship) || 'parentOf';
+            flowHtml += `
+              <div class="dag-flow-connector">
+                <div class="dag-flow-line"></div>
+                <div class="dag-flow-edge-badge">
+                  <svg style="width: 11px; height: 11px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                  <span>${escapeHtml(rel)}</span>
+                </div>
+                <div class="dag-flow-arrow"></div>
+              </div>
+            `;
+          }
+        }
+        flowHtml += '</div>';
+        return flowHtml;
+      }
+    }
+
+    // Branching Tree or Multi-Parent DAG:
+    // Render Layered Tree
+    let treeHtml = '<div class="dag-flow-container" style="gap: 0.85rem;">';
+    
+    // Group into levels
+    // Root Node (0) at bottom, ancestors above
+    const nonRoots = nodes.filter((n) => !n.isRoot);
+    const root = nodes.find((n) => n.isRoot) || nodes[0];
+
+    treeHtml += `
+      <div class="dag-flow-branches-row">
+        ${nonRoots.map((n) => renderDagNodeCardHtml(n)).join('')}
+      </div>
       
-      let label = `<b>${title}</b><br/>Signer: ${signer}`;
-      if (node.format) {
-        label += `<br/>Format: ${escapeHtml(node.format)}`;
-      }
+      <div class="dag-flow-connector">
+        <div class="dag-flow-line" style="height: 32px;"></div>
+        <div class="dag-flow-edge-badge">
+          <svg style="width: 11px; height: 11px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+          <span>Lineage &amp; Composition</span>
+        </div>
+        <div class="dag-flow-arrow"></div>
+      </div>
 
-      if (node.inceptions && node.inceptions.length > 0) {
-        label += `<br/><br/><b>Inceptions:</b>`;
-        node.inceptions.forEach((inc) => {
-          label += `<br/>• ${escapeHtml(inc)}`;
-        });
-      }
+      ${renderDagNodeCardHtml(root)}
+    `;
 
-      if (node.transformations && node.transformations.length > 0) {
-        label += `<br/><br/><b>Transformations:</b>`;
-        node.transformations.forEach((tr) => {
-          label += `<br/>• ${escapeHtml(tr)}`;
-        });
-      }
-
-      const cls = node.isRoot ? 'rootNode' : (node.isPseudo ? 'pseudoNode' : 'ingNode');
-      lines.push(`  ${id}["${label}"]:::${cls}`);
-
-      // Add parent-to-child edges
-      if (node.ingredients && node.ingredients.length > 0) {
-        node.ingredients.forEach((ing) => {
-          const parentId = `N${ing.index}`;
-          const rel = ing.relationship || 'ingredient';
-          lines.push(`  ${parentId} -->|"${escapeHtml(rel)}"| ${id}`);
-        });
-      }
-    });
-
-    return lines.join('\n');
+    treeHtml += '</div>';
+    return treeHtml;
   }
 
   function renderModalTabContent(item) {
@@ -782,8 +859,6 @@
     let html = '';
 
     if (tab === 'overview') {
-      const mermaidCode = buildMermaidGraphSyntax(dag);
-
       html = `
         <!-- Compact Trust Validation Strip -->
         <div class="trust-banner-compact">
@@ -802,66 +877,14 @@
           </div>
         </div>
 
-        <!-- C2PA Signals DAG & Manifest Graph -->
+        <!-- Interactive Signals DAG Flowchart -->
         <div class="prov-section">
           <div class="prov-section-header-row">
-            <div class="prov-section-title">Signals DAG &amp; Manifest Graph (${dag.nodes ? dag.nodes.length : 0} Node${dag.nodes && dag.nodes.length > 1 ? 's' : ''})</div>
+            <div class="prov-section-title">Provenance Signals DAG (${dag.nodes ? dag.nodes.length : 0} Manifest Node${dag.nodes && dag.nodes.length > 1 ? 's' : ''})</div>
             <span class="meta-badge badge-slate" style="font-size: 0.68rem;">Conformance Signals Rubric</span>
           </div>
 
-          <div class="mermaid-dag-card">
-            <!-- Mermaid Flowchart Container -->
-            <div id="mermaidDiagramContainer" class="mermaid-diagram-wrap">
-              <div style="color: var(--text-tertiary); font-size: 0.8rem;">Rendering Provenance DAG...</div>
-            </div>
-
-            <!-- Manifest Nodes Breakdown by Node -->
-            <div class="dag-nodes-list">
-              ${(dag.nodes || [])
-                .map(
-                  (node) => `
-                <div class="dag-node-item ${node.isRoot ? 'is-root' : ''}">
-                  <div class="dag-node-header">
-                    <div class="dag-node-title">
-                      <span>Manifest #${node.index} ${node.isRoot ? '(Active Claim)' : ''}</span>
-                      ${node.isRoot ? '<span class="meta-badge badge-emerald" style="font-size: 0.65rem;">Active Node</span>' : '<span class="meta-badge badge-indigo" style="font-size: 0.65rem;">Ingredient</span>'}
-                    </div>
-                    <div class="dag-node-signer"><strong>${escapeHtml(node.signerDisplay || node.signer)}</strong></div>
-                  </div>
-                  
-                  <div class="dag-node-signals">
-                    ${(node.inceptions || [])
-                      .map(
-                        (inc) => `
-                      <div class="signal-row">
-                        <span class="signal-icon-tag inception">Inception</span>
-                        <span style="font-weight: 600; color: var(--text-primary);">${escapeHtml(inc)}</span>
-                      </div>
-                    `
-                      )
-                      .join('')}
-                    ${(node.transformations || [])
-                      .map(
-                        (tr) => `
-                      <div class="signal-row">
-                        <span class="signal-icon-tag transformation">Transformation</span>
-                        <span style="font-weight: 600; color: var(--text-primary);">${escapeHtml(tr)}</span>
-                      </div>
-                    `
-                      )
-                      .join('')}
-                    ${
-                      (!node.inceptions || node.inceptions.length === 0) && (!node.transformations || node.transformations.length === 0)
-                        ? '<div style="font-size: 0.74rem; color: var(--text-tertiary); font-style: italic;">No local trait signals triggered on this manifest node</div>'
-                        : ''
-                    }
-                  </div>
-                </div>
-              `
-                )
-                .join('')}
-            </div>
-          </div>
+          ${renderProvenanceDagFlow(dag)}
         </div>
 
         <!-- Claim & Credentials -->
@@ -1021,29 +1044,6 @@
     }
 
     elements.modalTabContent.innerHTML = html;
-
-    // Asynchronously render Mermaid diagram if on overview tab
-    if (tab === 'overview') {
-      const diagramContainer = document.getElementById('mermaidDiagramContainer');
-      const mermaidCode = buildMermaidGraphSyntax(dag);
-      if (diagramContainer && mermaidCode && window.mermaid) {
-        const uniqueId = 'mermaid-' + Math.random().toString(36).substring(2, 9);
-        try {
-          window.mermaid.render(uniqueId, mermaidCode).then(({ svg }) => {
-            if (diagramContainer) {
-              diagramContainer.innerHTML = svg;
-            }
-          }).catch((err) => {
-            console.error('Mermaid render error:', err);
-            if (diagramContainer) {
-              diagramContainer.innerHTML = `<div style="font-size: 0.78rem; color: var(--text-tertiary);">Provenance Graph (${dag.nodes ? dag.nodes.length : 0} nodes in lineage)</div>`;
-            }
-          });
-        } catch (e) {
-          console.error('Mermaid exception:', e);
-        }
-      }
-    }
   }
 
   // Window Exposed Functions for HTML Event Handlers
