@@ -692,50 +692,69 @@
       .join('');
   }
 
-  // Render a Single DAG Flow Node
+  // Format short signal label and icon for compact display
+  function getShortSignalInfo(text, type) {
+    const clean = text
+      .replace(/^Contains\s+/i, '')
+      .replace(/\s+Transformations?/i, '')
+      .replace(/\s+Media/i, '');
+    let icon = type === 'inception' ? '●' : '●';
+    if (text.includes('Captured')) icon = '📷';
+    else if (text.includes('Fully GenAI')) icon = '🎨';
+    else if (text.includes('Perceptible GenAI')) icon = '✨';
+    else if (text.includes('Non-GenAI') || text.includes('Non-editorial')) icon = '✂️';
+    else if (text.includes('Possibly Using GenAI')) icon = '🪄';
+    else if (text.includes('ambiguous')) icon = '⚡';
+    return { icon, label: clean };
+  }
+
+  // Render a Single Compact DAG Flow Node
   function renderDagNodeCardHtml(node) {
     const isRoot = node.isRoot;
     const inceptions = node.inceptions || [];
     const transformations = node.transformations || [];
+    const fullTooltip = `Manifest #${node.index} (${isRoot ? 'Active Claim' : 'Ingredient'})\nSigner: ${node.signerDisplay || node.signer}\nFormat: ${node.format || 'Media Asset'}`;
 
     return `
-      <div class="dag-flow-node ${isRoot ? 'is-active-root' : ''}">
+      <div class="dag-flow-node ${isRoot ? 'is-active-root' : ''}" title="${escapeHtml(fullTooltip)}">
         <div class="dag-flow-node-header">
           <div class="dag-flow-node-title">
-            <span>Manifest #${node.index}</span>
+            <span>#${node.index}</span>
             ${
               isRoot
-                ? '<span class="meta-badge badge-emerald" style="font-size: 0.68rem; padding: 0.15rem 0.45rem;">Active Claim</span>'
-                : '<span class="meta-badge badge-indigo" style="font-size: 0.68rem; padding: 0.15rem 0.45rem;">Ingredient</span>'
+                ? '<span class="meta-badge badge-emerald" style="font-size: 0.65rem; padding: 0.1rem 0.4rem;">Active</span>'
+                : '<span class="meta-badge badge-indigo" style="font-size: 0.65rem; padding: 0.1rem 0.4rem;">Ingr</span>'
             }
           </div>
-          <div class="dag-flow-node-signer" title="${escapeHtml(node.signerOrg || node.signer)}">${escapeHtml(node.signerDisplay || node.signer)}</div>
+          <div class="dag-flow-node-signer" title="${escapeHtml(node.signerDisplay || node.signer)}">${escapeHtml(node.signer)}</div>
         </div>
 
         <div class="dag-flow-signals-wrap">
           ${inceptions
-            .map(
-              (inc) => `
-            <span class="signal-pill inception" title="${escapeHtml(inc)}">
-              <span class="signal-pill-dot"></span>
-              <span>Inception: ${escapeHtml(inc.replace(/^Contains\s+/i, ''))}</span>
-            </span>
-          `
-            )
+            .map((inc) => {
+              const info = getShortSignalInfo(inc, 'inception');
+              return `
+                <span class="signal-pill inception" title="Inception Signal: ${escapeHtml(inc)}\nAsserted by ${escapeHtml(node.signer)}">
+                  <span style="font-size: 0.75rem;">${info.icon}</span>
+                  <span>${escapeHtml(info.label)}</span>
+                </span>
+              `;
+            })
             .join('')}
           ${transformations
-            .map(
-              (tr) => `
-            <span class="signal-pill transformation" title="${escapeHtml(tr)}">
-              <span class="signal-pill-dot"></span>
-              <span>Transformation: ${escapeHtml(tr.replace(/^Contains\s+/i, ''))}</span>
-            </span>
-          `
-            )
+            .map((tr) => {
+              const info = getShortSignalInfo(tr, 'transformation');
+              return `
+                <span class="signal-pill transformation" title="Transformation Signal: ${escapeHtml(tr)}\nAsserted by ${escapeHtml(node.signer)}">
+                  <span style="font-size: 0.75rem;">${info.icon}</span>
+                  <span>${escapeHtml(info.label)}</span>
+                </span>
+              `;
+            })
             .join('')}
           ${
             inceptions.length === 0 && transformations.length === 0
-              ? '<span style="font-size: 0.72rem; color: var(--text-tertiary); font-style: italic; padding: 0.1rem 0;">No local trait signals triggered</span>'
+              ? '<span style="font-size: 0.68rem; color: var(--text-tertiary); font-style: italic; padding: 0.05rem 0;" title="No local trait signals triggered on this manifest node">No local signals</span>'
               : ''
           }
         </div>
